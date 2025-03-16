@@ -2,117 +2,74 @@ document.addEventListener("DOMContentLoaded", function () {
   const countrySections = document.querySelectorAll(".country-section");
   const countryLinks = document.querySelectorAll(".continents-list li[data-country]");
   const allSection = document.getElementById("all");
-  const gridContainer = document.querySelector(".grid-container");
 
-  console.log("Script loaded!"); // Debugging line
+  console.log("✅ Script loaded!");
 
-  // Ensure all sections except "All" are hidden
+  // ✅ Hide all sections first
   countrySections.forEach((section) => {
-      if (section.id !== "all") {
-          section.style.display = "none";
-      }
+      section.style.display = "none";
+      section.style.opacity = "0";
+      section.style.height = "0";
   });
 
-  // Show the "All" section and its content automatically on page load
+  // ✅ Show "All" section by default
   if (allSection) {
-      console.log("All section found!"); // Debugging line
       allSection.style.display = "block";
-
-      // Make sure all items inside "All" are visible
-      const allItems = allSection.querySelectorAll(".grid-item");
-      allItems.forEach((item) => {
-          item.style.display = "block";
-          console.log("Showing:", item); // Debugging each item
-      });
-  } else {
-      console.log("All section NOT found! Check HTML.");
+      allSection.style.opacity = "1";
+      allSection.style.height = "auto";
   }
 
-  // Handle filtering when a continent is clicked
+  // ✅ Filtering when a continent is clicked
   countryLinks.forEach((link) => {
       link.addEventListener("click", function () {
           const country = this.getAttribute("data-country");
+          console.log("🌍 Clicked:", country); // Debugging log
 
+          // ✅ Hide all sections first
+          countrySections.forEach((section) => {
+              section.style.display = "none";
+              section.style.opacity = "0";
+              section.style.height = "0";
+          });
+
+          // ✅ Show "All" section when clicking "All"
           if (country === "all") {
-              countrySections.forEach((section) => {
-                  section.style.display = "block";
-              });
-          } else {
-              countrySections.forEach((section) => {
-                  section.style.display = "none";
-              });
+              allSection.style.display = "block";
+              allSection.style.opacity = "1";
+              allSection.style.height = "auto";
+              console.log("✅ Showing all parks");
+              return;
+          }
 
-              const selectedSection = document.getElementById(country);
-              if (selectedSection) {
-                  selectedSection.style.display = "block";
-              }
+          // ✅ Show only the selected country section
+          const selectedSection = document.getElementById(country);
+          if (selectedSection) {
+              selectedSection.style.display = "block";
+              selectedSection.style.opacity = "1";
+              selectedSection.style.height = "auto";
+              console.log("✅ Showing section:", country);
+          } else {
+              console.log("❌ No section found for:", country);
           }
       });
   });
 });
 
-
-  const galleryContainer = document.querySelector(".gallery-container");
-  const galleryControlsContainer = document.querySelector(".gallery-controls");
-  const galleryControls = ["previous", "next"];
-  const galleryItems = document.querySelectorAll(".gallery-item");
-  
-  class Carousel {
-    constructor(container, items, controls) {
-      this.carouselContainer = container;
-      this.carouselControls = controls;
-      this.carouselArray = [...items];
-    }
-  
-    updateGallery() {
-      this.carouselArray.forEach((el) => {
-        el.classList.remove("gallery-item-1");
-        el.classList.remove("gallery-item-2");
-        el.classList.remove("gallery-item-3");
-        el.classList.remove("gallery-item-4");
-        el.classList.remove("gallery-item-5");
-      });
-  
-      this.carouselArray.slice(0, 5).forEach((el, i) => {
-        el.classList.add(`gallery-item-${i + 1}`);
-      });
-    }
-    setCurrentState(direction) {
-      if (direction.className == "gallery-controls-previous") {
-        this.carouselArray.unshift(this.carouselArray.pop());
-      } else {
-        this.carouselArray.push(this.carouselArray.shift());
-      }
-      this.updateGallery();
-    }
-    setControls() {
-      this.carouselControls.forEach((control) => {
-        galleryControlsContainer.appendChild(
-          document.createElement("button")
-        ).className = `gallery-controls-${control}`;
-        document.querySelector(`.gallery-controls-${control}`).innerText =
-          control;
-      });
-    }
-    useControls() {
-      const triggers = [...galleryControlsContainer.childNodes];
-      triggers.forEach((control) => {
-        control.addEventListener("click", (e) => {
-          e.preventDefault();
-          this.setCurrentState(control);
-        });
-      });
-    }
+var swiper = new Swiper(".mySwiper", {
+  slidesPerView: 3, // Show 3 slides at a time
+  spaceBetween: 20, // Adjust space between slides
+  loop: true,
+  autoplay: {
+    delay: 3000, // 3 seconds per slide
+    disableOnInteraction: false, // Keeps autoplay running even if user interacts
+  },
+  navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+  },
+  breakpoints: {
+      1024: { slidesPerView: 3 },
+      768: { slidesPerView: 2 },
+      480: { slidesPerView: 1 }
   }
-  const exampleCarousel = new Carousel(
-    galleryContainer,
-    galleryItems,
-    galleryControls
-  );
-  
-  exampleCarousel.setControls();
-  exampleCarousel.useControls();
-  
-  
-  
-  
+});
